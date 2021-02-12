@@ -1,0 +1,130 @@
+﻿@model ShopBridgeApp.Models.Inventory
+
+@{
+    ViewBag.Title = "Add";
+}
+
+
+
+
+@using (Html.BeginForm("Add" ,"",FormMethod.Post, new { enctype = "multipart/form-data"}))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Add Inventory</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+  
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger"})
+           
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ImagePath, htmlAttributes: new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            <input type="file" id="ImageFileId" name="ImageFile" class="form-control-file" onchange="loadImage(event)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-info" />
+        </div>
+    </div>
+</div>
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        <div>
+            <p class="alert-success"> @TempData["Message"].ToString()</p>
+        </div>
+    }
+</div>
+    <h4><i class="fa fa-list-alt"></i> Inventory Items</h4>
+    
+    <hr />
+    <table class="table table-responsive table-striped">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th></th>
+        </tr>
+        <tbody>
+            @foreach (var item in Model.InventoryItemList)
+            {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Price.ToString("c")
+                </td>
+                <td>
+
+                    <img src="@Url.Content(@item.ImagePath)" width="70" height="70" />
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = @item.ID }) 
+                   
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = @item.ID }, new { onclick = "return confirm('Click on Ok to Delete?');" })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+@*<script>
+
+    var loadImage = function (event)
+    {
+        debugger;
+        var output = document.getElementById("imgphoto");
+        output.src = URL.createObjectURL(event.target.files[0]);
+    }
+    </script>*@
+}
+@*@section Styles {
+    <link href="~/Content/loader.css" rel="stylesheet" type="text/css" />
+}*@
